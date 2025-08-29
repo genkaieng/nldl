@@ -26,4 +26,8 @@ filename=${filename//\//-}
 filename=${filename// /_}
 filename="${filename}.mp4"
 
-streamlink --niconico-user-session="$NICOLIVE_SESSION" "$1" best -O | ffmpeg -i - -c copy -f mp4 -y "$filename"
+if [ -z "$NICOLIVE_SESSION" ]; then
+  streamlink "$1" best -O | ffmpeg -i - -c copy -f mp4 -y "$filename"
+else
+  streamlink --niconico-user-session="$NICOLIVE_SESSION" "$1" best -O | ffmpeg -i - -c copy -f mp4 -y "$filename"
+fi
