@@ -1,6 +1,6 @@
 # nldl
 
-ニコ生放送を保存するシェルスクリプト。
+ニコニコ生放送を保存するシェルスクリプト。
 
 <sub><strong>※内部では[streamlink](https://streamlink.github.io/)を呼んでるだけ。</strong></sub>
 
