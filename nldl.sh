@@ -9,19 +9,27 @@ if [ -f "$DIRNAME/.env" ]; then
   source "$DIRNAME/.env"
 fi
 
-lv=$(echo "$1" | grep -oP 'lv\d+')
+lvid=$(echo "$1" | sed -nE 's/.*(lv[0-9]+).*/\1/p')
 
 html=$(wget -qO- "$1" | tr -d '\n')
-title=$(echo "$html" | grep -oP '(?<=<title>)(.*?)(?=</title>)')
-name=$(echo "$html" | grep -oP '"@type":"Person","name":"\K[^"]+')
+title=$(echo "$html" | sed -nE 's/.*<title>([^<]*)<\/title>.*/\1/p')
+name=$(echo "$html" | sed -nE 's/.*"@type":"Person","name":"([^"]*)".*/\1/p')
 
-echo "$name - $title - $lv"
+echo "$name - $title - $lvid"
 
 IFS="-" read -ra parts <<< "$title"
 title=$(echo "${parts[0]}" | xargs)
-date=$(echo "${parts[1]}" | xargs | grep -oP '\d+\/\d+\/\d+' | xargs -I{} date -d {} +%Y%m%d)
+date=$(echo "${parts[1]}" | xargs |
+  awk '{
+    if (match($0,/[0-9]{4}\/[0-9]{1,2}\/[0-9]{1,2}/)) {
+      date = substr($0, RSTART, RLENGTH)
+      split(date,a,"/")
+      printf("%04d%02d%02d",a[1],a[2],a[3])
+    }
+  }'
+)
 
-filename="$date $title $name $lv"
+filename="$date $title $name $lvid"
 filename=${filename//\//-}
 filename=${filename// /_}
 filename="${filename}.mp4"
