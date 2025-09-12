@@ -9,10 +9,9 @@ if [ -f "$DIRNAME/.env" ]; then
   source "$DIRNAME/.env"
 fi
 
-lvid=$(echo "$1" | sed -nE 's/.*(lv[0-9]+).*/\1/p')
-
 html=$(wget -qO- "$1" | tr -d '\n')
 title=$(echo "$html" | sed -nE 's/.*<title>([^<]*)<\/title>.*/\1/p')
+lvid=$(echo "$html" | awk 'match($0,/lv[0-9]+/){print substr($0,RSTART,RLENGTH); exit}')
 name=$(echo "$html" | sed -nE 's/.*"@type":"Person","name":"([^"]*)".*/\1/p')
 
 echo "$name - $title - $lvid"
