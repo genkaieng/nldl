@@ -2,7 +2,8 @@
 
 ニコニコ生放送を保存するシェルスクリプト。
 
-<sub><strong>※内部では[streamlink](https://streamlink.github.io/)を呼んでるだけ。</strong></sub>
+放送タイトル、放送者名、日時をファイル名にして[streamlink](https://streamlink.github.io/)で生放送を保存する。<br>
+ffmpegでmp4に変換も行っているので、ffmpegにも依存。
 
 ## Dependencies
 
